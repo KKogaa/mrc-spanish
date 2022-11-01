@@ -88,7 +88,7 @@ def convert_dataframe_translated_race(df: pd.DataFrame, type=None):
 
 if __name__ == "__main__":
 
-    mode = "RACE-SINGLE-SPANISH"
+    mode = "MEGA-SPANISH-SINGLE"
     # obtaining RACE + QUAIL + RECORES datasets and concatenating
     # spanish datasets
     if mode == "MEGA-SPANISH-SINGLE":
@@ -118,6 +118,13 @@ if __name__ == "__main__":
             "translated_answers"
         ].str.split(",")
 
+        df_recores_train = pd.read_csv("data/original/recores_train.csv")
+        df_recores_train = df_recores_train.drop(columns=['text', 'reason'])
+        df_recores_val = df_recores_val = pd.read_csv("data/original/recores_val.csv")
+        df_recores_val.drop(columns=['text', 'reason'])
+        df_recores_test = df_recores_test = pd.read_csv("data/original/recores_test.csv")
+        df_recores_test.drop(columns=['text', 'reason'])
+
         # binarirze
         df_t_quail_train = convert_dataframe_translated_quail(df_t_quail_train)
         df_t_quail_val = convert_dataframe_translated_quail(df_t_quail_val)
@@ -128,13 +135,13 @@ if __name__ == "__main__":
         df_t_race_test = convert_dataframe_translated_race(df_t_race_test)
 
         # concatenate and save
-        frames = [df_t_quail_train, df_t_race_train]
+        frames = [df_t_quail_train, df_t_race_train, df_recores_train]
         result_train = pd.concat(frames)
 
-        frames = [df_t_quail_val, df_t_race_val]
+        frames = [df_t_quail_val, df_t_race_val, df_recores_val]
         result_val = pd.concat(frames)
 
-        frames = [df_t_quail_test, df_t_race_test]
+        frames = [df_t_quail_test, df_t_race_test, df_recores_test]
         result_test = pd.concat(frames)
 
         result_train.to_csv("./data/translated/mega_spanish_train.csv", index=False)
